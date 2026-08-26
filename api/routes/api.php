@@ -8,7 +8,7 @@ Route::get('/health', function () {
     return response()->json(['status' => 'ok', 'application' => 'FlowDesk API', 'version' => '1.0.0']);
 });
 
-Route::get('/user', function (Request $request) {
+Route::get('/me', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 

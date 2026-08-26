@@ -24,6 +24,15 @@ class TicketResource extends JsonResource
             'description' => $this->description,
             'status' => $this->status->value,
             'priority' => $this->priority->value,
+
+            'creator' => $this->whenLoaded('creator', function (): array {
+                return [
+                    'id' => $this->creator->id,
+                    'name' => $this->creator->name,
+                    'email' => $this->creator->email,
+                ];
+            }),
+
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),
         ];

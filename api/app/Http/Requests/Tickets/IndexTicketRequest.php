@@ -3,15 +3,14 @@
 namespace App\Http\Requests\Tickets;
 
 use App\Enums\TicketPriority;
+use App\Enums\TicketStatus;
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\Attributes\FailOnUnknownFields;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-#[FailOnUnknownFields]
-class StoreTicketRequest extends FormRequest
+class IndexTicketRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -40,30 +39,24 @@ class StoreTicketRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'subject' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string', 'min:10'],
+            'status' => ['sometimes', Rule::enum(TicketStatus::class)],
             'priority' => ['sometimes', Rule::enum(TicketPriority::class)],
+            'per_page' => ['sometimes', 'integer', 'min:1', 'max:100'],
         ];
     }
 
-    /**
-     * Get the subject of the ticket.
-     */
-    public function subject(): string
+    public function status(): ?TicketStatus
     {
-        return $this->string('subject')->toString();
+        return $this->enum('status', TicketStatus::class);
     }
 
-    /**
-     * Get the description of the ticket.
-     */
-    public function description(): string
+    public function priority(): ?TicketPriority
     {
-        return $this->string('description')->toString();
+        return $this->enum('priority', TicketPriority::class);
     }
 
-    public function priority(): TicketPriority
+    public function perPage(): ?int
     {
-        return $this->enum('priority', TicketPriority::class, TicketPriority::Medium);
+        return $this->integer('per_page', 15);
     }
 }

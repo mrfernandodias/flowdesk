@@ -8,6 +8,14 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $organization_id
+ * @property int $created_by
+ * @property string $subject
+ * @property string $description
+ * @property TicketStatus $status
+ * @property TicketPriority $priority
+ */
 #[Fillable(['organization_id', 'created_by', 'subject', 'description', 'status', 'priority'])]
 class Ticket extends Model
 {

@@ -12,8 +12,24 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('/organizations/{organization}/tickets', [TicketController::class, 'index'])->middleware('auth:sanctum');
+Route::get(
+    '/organizations/{organization}/tickets',
+    [TicketController::class, 'index']
+)->middleware('auth:sanctum');
+
 Route::post(
     '/organizations/{organization}/tickets',
     [TicketController::class, 'store'],
 )->middleware('auth:sanctum');
+
+Route::get(
+    '/organizations/{organization}/tickets/{ticket}',
+    [TicketController::class, 'show']
+)->middleware('auth:sanctum')
+    ->scopeBindings();
+
+Route::patch(
+    '/organizations/{organization}/tickets/{ticket}',
+    [TicketController::class, 'update']
+)->middleware('auth:sanctum')
+    ->scopeBindings();

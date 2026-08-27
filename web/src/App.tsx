@@ -1,19 +1,7 @@
-import { AppShell } from "@/app/layouts/AppShell";
+import { AppRouter } from "@/app/router/AppRouter";
 
 function App() {
-    return (
-        <AppShell>
-            <div>
-                <h1 className="text-2xl font-semibold tracking-tight">
-                    Dashboard
-                </h1>
-
-                <p className="mt-1 text-sm text-muted-foreground">
-                    Visão geral da operação de atendimento.
-                </p>
-            </div>
-        </AppShell>
-    );
+    return <AppRouter />;
 }
 
 export default App;

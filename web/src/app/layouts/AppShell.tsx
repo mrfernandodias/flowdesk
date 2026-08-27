@@ -1,15 +1,12 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties } from "react";
+import { Outlet } from "react-router";
 
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 import { AppSidebar } from "./AppSidebar";
 import { Topbar } from "./Topbar";
 
-type AppShellProps = {
-    children: ReactNode;
-};
-
-export function AppShell({ children }: AppShellProps) {
+export function AppShell() {
     return (
         <SidebarProvider
             defaultOpen
@@ -25,7 +22,9 @@ export function AppShell({ children }: AppShellProps) {
             <SidebarInset className="bg-slate-50">
                 <Topbar />
 
-                <main className="flex-1 p-4 sm:p-6 lg:p-7">{children}</main>
+                <main className="flex-1 p-4 sm:p-6 lg:p-7">
+                    <Outlet />
+                </main>
             </SidebarInset>
         </SidebarProvider>
     );

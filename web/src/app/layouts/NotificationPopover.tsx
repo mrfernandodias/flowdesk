@@ -1,11 +1,7 @@
 import { Bell } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const notifications = [
     {
@@ -47,18 +43,12 @@ export function NotificationPopover() {
                 </Button>
             </PopoverTrigger>
 
-            <PopoverContent
-                align="end"
-                sideOffset={8}
-                className="w-96 overflow-hidden p-0"
-            >
+            <PopoverContent align="end" sideOffset={8} className="w-96 overflow-hidden p-0">
                 <div className="border-b px-4 py-3">
                     <div className="flex items-center justify-between">
                         <h3 className="font-semibold">Notificações</h3>
 
-                        <span className="text-xs text-muted-foreground">
-                            2 novas
-                        </span>
+                        <span className="text-xs text-muted-foreground">2 novas</span>
                     </div>
                 </div>
 
@@ -72,9 +62,7 @@ export function NotificationPopover() {
                                 transition-colors hover:bg-muted/60
                             "
                         >
-                            <p className="text-sm font-medium">
-                                {notification.title}
-                            </p>
+                            <p className="text-sm font-medium">{notification.title}</p>
 
                             <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
                                 {notification.description}

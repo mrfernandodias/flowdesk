@@ -29,9 +29,7 @@ export function ProfileMenu() {
                 <div className="hidden min-w-0 text-left lg:block">
                     <p className="truncate text-sm font-medium">Fernando</p>
 
-                    <p className="truncate text-xs text-muted-foreground">
-                        Administrador
-                    </p>
+                    <p className="truncate text-xs text-muted-foreground">Administrador</p>
                 </div>
 
                 <ChevronDown

@@ -1,10 +1,4 @@
-import {
-    BarChart3,
-    LayoutDashboard,
-    Settings,
-    Ticket,
-    Users,
-} from "lucide-react";
+import { BarChart3, LayoutDashboard, Settings, Ticket, Users } from "lucide-react";
 import { NavLink, useLocation } from "react-router";
 
 import {
@@ -82,9 +76,7 @@ export function AppSidebar() {
                             group-data-[collapsible=icon]:hidden
                         "
                     >
-                        <span className="truncate text-base font-semibold">
-                            FlowDesk
-                        </span>
+                        <span className="truncate text-base font-semibold">FlowDesk</span>
 
                         <span className="truncate text-xs text-muted-foreground">
                             Service Management
@@ -107,10 +99,7 @@ export function AppSidebar() {
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {navigation.map((item) => {
-                                const isActive = isPathActive(
-                                    location.pathname,
-                                    item.path,
-                                );
+                                const isActive = isPathActive(location.pathname, item.path);
 
                                 return (
                                     <SidebarMenuItem
@@ -153,10 +142,7 @@ export function AppSidebar() {
                             <SidebarMenuItem className="flex w-full justify-center">
                                 <SidebarMenuButton
                                     asChild
-                                    isActive={isPathActive(
-                                        location.pathname,
-                                        settingsItem.path,
-                                    )}
+                                    isActive={isPathActive(location.pathname, settingsItem.path)}
                                     tooltip={settingsItem.title}
                                     className="
                                         h-9 w-full rounded-[6px] px-3

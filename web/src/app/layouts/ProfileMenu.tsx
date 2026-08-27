@@ -1,4 +1,5 @@
 import { ChevronDown, LogOut, Settings, UserRound } from "lucide-react";
+import { useNavigate } from "react-router";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -9,8 +10,39 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
+import { useLogout } from "@/features/auth/hooks/use-logout";
+
+function getInitials(name: string) {
+    return name
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((part) => part.charAt(0))
+        .join("")
+        .toUpperCase();
+}
 
 export function ProfileMenu() {
+    const navigate = useNavigate();
+
+    const currentUserQuery = useCurrentUser();
+    const logoutMutation = useLogout();
+
+    const currentUser = currentUserQuery.data;
+
+    async function handleLogout() {
+        try {
+            await logoutMutation.mutateAsync();
+
+            navigate("/login", {
+                replace: true,
+            });
+        } catch {
+            // O erro está disponível em logoutMutation.error.
+        }
+    }
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger
@@ -23,13 +55,19 @@ export function ProfileMenu() {
                 "
             >
                 <Avatar className="size-9">
-                    <AvatarFallback>FS</AvatarFallback>
+                    <AvatarFallback>
+                        {currentUser ? getInitials(currentUser.name) : "--"}
+                    </AvatarFallback>
                 </Avatar>
 
                 <div className="hidden min-w-0 text-left lg:block">
-                    <p className="truncate text-sm font-medium">Fernando</p>
+                    <p className="truncate text-sm font-medium">
+                        {currentUser?.name ?? "Usuário"}
+                    </p>
 
-                    <p className="truncate text-xs text-muted-foreground">Administrador</p>
+                    <p className="truncate text-xs text-muted-foreground">
+                        {currentUser?.email ?? ""}
+                    </p>
                 </div>
 
                 <ChevronDown
@@ -57,9 +95,16 @@ export function ProfileMenu() {
 
                 <DropdownMenuSeparator />
 
-                <DropdownMenuItem variant="destructive">
+                <DropdownMenuItem
+                    variant="destructive"
+                    disabled={logoutMutation.isPending}
+                    onSelect={() => {
+                        void handleLogout();
+                    }}
+                >
                     <LogOut />
-                    Sair
+
+                    {logoutMutation.isPending ? "Saindo..." : "Sair"}
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

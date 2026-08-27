@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router";
 
 import { AppShell } from "@/app/layouts/AppShell";
+import { LoginPage } from "@/features/auth/pages/LoginPage";
 import { DashboardPage } from "@/features/dashboard/pages/DashboardPage";
 import { ReportsPage } from "@/features/reports/pages/ReportsPage";
 import { SettingsPage } from "@/features/settings/pages/SettingsPage";
@@ -10,6 +11,7 @@ import { TicketsPage } from "@/features/tickets/pages/TicketsPage";
 export function AppRouter() {
     return (
         <Routes>
+            <Route path="/login" element={<LoginPage />} />
             <Route element={<AppShell />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
 

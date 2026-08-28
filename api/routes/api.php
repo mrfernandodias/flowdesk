@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\OrganizationController;
 use App\Http\Controllers\Api\TicketController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,3 +34,6 @@ Route::patch(
     [TicketController::class, 'update']
 )->middleware('auth:sanctum')
     ->scopeBindings();
+
+Route::get('/organizations', [OrganizationController::class, 'index'])
+    ->middleware('auth:sanctum');

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 type TicketsPaginationProps = {
     currentPage: number;
@@ -41,7 +41,7 @@ export const TicketsPagination = ({
                     disabled={currentPage === lastPage || isFetching}
                     onClick={() => onPageChange(currentPage + 1)}
                 >
-                    <ChevronLeft className="size-4" />
+                    <ChevronRight className="size-4" />
                     Próxima
                 </Button>
             </div>

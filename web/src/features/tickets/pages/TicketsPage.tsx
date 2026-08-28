@@ -1,20 +1,36 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { useOrganizationSelection } from "@/features/organizations/hooks/use-organization-selection";
 import { TicketsPagination } from "@/features/tickets/components/TicketsPagination";
 import { TicketsTable } from "@/features/tickets/components/TicketsTable";
 import { useTickets } from "@/features/tickets/hooks/use-tickets";
 
-export function TicketsPage() {
-    const [page, setPage] = useState(1);
+type PaginationState = {
+    organizationId: number | null;
+    page: number;
+};
 
+export function TicketsPage() {
     const { selectedOrganization } = useOrganizationSelection();
 
-    const ticketsQuery = useTickets(selectedOrganization?.id ?? null, page);
+    const organizationId = selectedOrganization?.id ?? null;
 
-    useEffect(() => {
-        setPage(1);
-    }, [selectedOrganization?.id]);
+    const [pagination, setPagination] = useState<PaginationState>({
+        organizationId: null,
+        page: 1,
+    });
+
+    const page =
+        pagination.organizationId === organizationId ? pagination.page : 1;
+
+    const ticketsQuery = useTickets(organizationId, page);
+
+    function handlePageChange(nextPage: number) {
+        setPagination({
+            organizationId,
+            page: nextPage,
+        });
+    }
 
     if (!selectedOrganization) {
         return (
@@ -83,7 +99,7 @@ export function TicketsPage() {
                     currentPage={ticketsQuery.data.meta.current_page}
                     lastPage={ticketsQuery.data.meta.last_page}
                     isFetching={ticketsQuery.isFetching}
-                    onPageChange={setPage}
+                    onPageChange={handlePageChange}
                 />
             </div>
         </div>

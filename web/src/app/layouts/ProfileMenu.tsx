@@ -61,9 +61,7 @@ export function ProfileMenu() {
                 </Avatar>
 
                 <div className="hidden min-w-0 text-left lg:block">
-                    <p className="truncate text-sm font-medium">
-                        {currentUser?.name ?? "Usuário"}
-                    </p>
+                    <p className="truncate text-sm font-medium">{currentUser?.name ?? "Usuário"}</p>
 
                     <p className="truncate text-xs text-muted-foreground">
                         {currentUser?.email ?? ""}

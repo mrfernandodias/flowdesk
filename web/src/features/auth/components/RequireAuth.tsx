@@ -9,9 +9,7 @@ export function RequireAuth() {
     if (currentUserQuery.isPending) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-slate-50">
-                <p className="text-sm text-muted-foreground">
-                    Verificando autenticação...
-                </p>
+                <p className="text-sm text-muted-foreground">Verificando autenticação...</p>
             </div>
         );
     }
@@ -28,9 +26,7 @@ export function RequireAuth() {
         return (
             <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
                 <div className="text-center">
-                    <p className="font-medium">
-                        Não foi possível verificar sua sessão.
-                    </p>
+                    <p className="font-medium">Não foi possível verificar sua sessão.</p>
 
                     <p className="mt-1 text-sm text-muted-foreground">
                         Tente novamente em alguns instantes.

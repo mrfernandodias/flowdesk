@@ -2,6 +2,7 @@ import { Search } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { OrganizationSwitcher } from "@/features/organizations/components/OrganizationSwitcher";
 
 import { NotificationPopover } from "./NotificationPopover";
 import { ProfileMenu } from "./ProfileMenu";
@@ -27,6 +28,8 @@ export function Topbar() {
 
                     <div aria-hidden="true" className="h-4 w-px bg-border" />
                 </div>
+
+                <OrganizationSwitcher />
 
                 <div className="relative hidden w-full max-w-lg md:block">
                     <Search

@@ -6,10 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useLogin } from "@/features/auth/hooks/use-login";
-import {
-    loginSchema,
-    type LoginFormData,
-} from "@/features/auth/schemas/login-schema";
+import { loginSchema, type LoginFormData } from "@/features/auth/schemas/login-schema";
 
 export function LoginPage() {
     const navigate = useNavigate();
@@ -91,22 +88,14 @@ export function LoginPage() {
                             {...form.register("password")}
                         />
 
-                        {passwordError && (
-                            <FieldError errors={[passwordError]} />
-                        )}
+                        {passwordError && <FieldError errors={[passwordError]} />}
                     </Field>
 
                     {loginMutation.isError && (
-                        <p className="text-sm text-destructive">
-                            E-mail ou senha inválidos.
-                        </p>
+                        <p className="text-sm text-destructive">E-mail ou senha inválidos.</p>
                     )}
 
-                    <Button
-                        type="submit"
-                        className="w-full"
-                        disabled={loginMutation.isPending}
-                    >
+                    <Button type="submit" className="w-full" disabled={loginMutation.isPending}>
                         {loginMutation.isPending ? "Entrando..." : "Entrar"}
                     </Button>
                 </form>

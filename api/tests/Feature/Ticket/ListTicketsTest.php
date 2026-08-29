@@ -241,3 +241,43 @@ it('paginates tickets', function () {
         ->assertJsonPath('meta.total', 7)
         ->assertJsonPath('meta.last_page', 3);
 });
+
+it('filters tickets by search term', function () {
+    $user = User::factory()->create();
+    $organization = Organization::factory()->create();
+
+    Membership::factory()->create([
+        'organization_id' => $organization->id,
+        'user_id' => $user->id,
+        'role' => 'agent',
+    ]);
+
+    Ticket::factory()->create([
+        'organization_id' => $organization->id,
+        'created_by' => $user->id,
+        'subject' => 'Erro crítico no faturamento',
+        'description' => 'Descrição qualquer para o ticket.',
+    ]);
+
+    Ticket::factory()->create([
+        'organization_id' => $organization->id,
+        'created_by' => $user->id,
+        'subject' => 'Solicitação de acesso',
+        'description' => 'Usuário precisa de nova permissão.',
+    ]);
+
+    Sanctum::actingAs($user);
+
+    $this
+        ->getJson(
+            "/api/organizations/{$organization->id}/tickets?search=faturamento"
+        )
+        ->assertOk()
+        ->assertJsonCount(1, 'data')
+        ->assertJsonFragment([
+            'subject' => 'Erro crítico no faturamento',
+        ])
+        ->assertJsonMissing([
+            'subject' => 'Solicitação de acesso',
+        ]);
+});

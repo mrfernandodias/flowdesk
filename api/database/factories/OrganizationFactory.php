@@ -22,7 +22,7 @@ class OrganizationFactory extends Factory
 
         return [
             'name' => $name,
-            'slug' => Str::slug($name) . '-' . fake()->unique()->numberBetween(1, 1000),
+            'slug' => Str::slug($name).'-'.fake()->unique()->numberBetween(1, 1000),
         ];
     }
 }

@@ -33,11 +33,29 @@ class TicketController extends Controller
             ->with('creator')
             ->when(
                 $request->status(),
-                fn ($query, TicketStatus $status) => $query->where('status', $status->value)
+                fn($query, TicketStatus $status) => $query->where('status', $status->value)
             )
             ->when(
                 $request->priority(),
-                fn ($query, TicketPriority $priority) => $query->where('priority', $priority->value)
+                fn($query, TicketPriority $priority) => $query->where('priority', $priority->value)
+            )
+            ->when(
+                $request->search(),
+                function ($query, string $search) {
+                    $query->where(function ($query) use ($search) {
+                        $query
+                            ->whereLike(
+                                'subject',
+                                "%{$search}%",
+                                caseSensitive: false
+                            )
+                            ->orWhereLike(
+                                'description',
+                                "%{$search}%",
+                                caseSensitive: false
+                            );
+                    });
+                }
             )
             ->latest()
             ->paginate($request->perPage())

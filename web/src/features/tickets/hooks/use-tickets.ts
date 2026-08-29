@@ -6,7 +6,13 @@ type UseTicketsParams = Omit<GetTicketsParams, "organizationId"> & {
     organizationId: number | null;
 };
 
-export function useTickets({ organizationId, page, status, priority }: UseTicketsParams) {
+export function useTickets({
+    organizationId,
+    page,
+    status,
+    priority,
+    search,
+}: UseTicketsParams) {
     return useQuery({
         queryKey: [
             "tickets",
@@ -15,6 +21,7 @@ export function useTickets({ organizationId, page, status, priority }: UseTicket
                 page,
                 status,
                 priority,
+                search,
             },
         ],
 
@@ -24,6 +31,7 @@ export function useTickets({ organizationId, page, status, priority }: UseTicket
                 page,
                 status,
                 priority,
+                search,
             }),
 
         enabled: organizationId !== null,
@@ -36,13 +44,15 @@ export function useTickets({ organizationId, page, status, priority }: UseTicket
                 | {
                       status?: unknown;
                       priority?: unknown;
+                      search?: unknown;
                   }
                 | undefined;
 
             if (
                 previousOrganizationId !== organizationId ||
                 previousFilter?.status !== status ||
-                previousFilter?.priority !== priority
+                previousFilter?.priority !== priority ||
+                previousFilter?.search !== search
             ) {
                 return undefined;
             }

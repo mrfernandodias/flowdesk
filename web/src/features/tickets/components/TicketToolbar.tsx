@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
     Select,
     SelectContent,
@@ -7,7 +8,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import type { Ticket } from "@/features/tickets/schemas/ticket-schema";
-import { X } from "lucide-react";
+import { Search, X } from "lucide-react";
 
 type TicketsToolbarProps = {
     status: Ticket["status"] | undefined;
@@ -16,6 +17,8 @@ type TicketsToolbarProps = {
     onPriorityChange: (priority: Ticket["priority"] | undefined) => void;
     hasActiveFilters: boolean;
     onClearFilters: () => void;
+    searchValue: string;
+    onSearchChange: (value: string) => void;
 };
 
 const statusOptions: Array<{
@@ -73,6 +76,8 @@ export function TicketsToolbar({
     onPriorityChange,
     hasActiveFilters,
     onClearFilters,
+    searchValue,
+    onSearchChange,
 }: TicketsToolbarProps) {
     function handleValueChange(value: string) {
         if (value === "all") {
@@ -95,7 +100,20 @@ export function TicketsToolbar({
     }
 
     return (
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+            <div className="relative w-full max-w-sm">
+                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+
+                <Input
+                    type="search"
+                    value={searchValue}
+                    onChange={(event) => onSearchChange(event.target.value)}
+                    maxLength={255}
+                    placeholder="Buscar tickets"
+                    className="pl-9"
+                />
+            </div>
+
             <Select value={status ?? "all"} onValueChange={handleValueChange}>
                 <SelectTrigger className="w-44">
                     <SelectValue placeholder="Status" />

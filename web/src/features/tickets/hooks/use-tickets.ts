@@ -6,13 +6,7 @@ type UseTicketsParams = Omit<GetTicketsParams, "organizationId"> & {
     organizationId: number | null;
 };
 
-export function useTickets({
-    organizationId,
-    page,
-    status,
-    priority,
-    search,
-}: UseTicketsParams) {
+export function useTickets({ organizationId, page, status, priority, search }: UseTicketsParams) {
     return useQuery({
         queryKey: [
             "tickets",

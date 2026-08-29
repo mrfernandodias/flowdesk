@@ -1,10 +1,7 @@
 import { useSearchParams } from "react-router";
 
 import { useDebounceValue } from "@/shared/hooks/use-debounce";
-import {
-    ticketPrioritySchema,
-    ticketStatusSchema,
-} from "../schemas/ticket-schema";
+import { ticketPrioritySchema, ticketStatusSchema } from "../schemas/ticket-schema";
 
 export function useTicketFilters() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -13,15 +10,11 @@ export function useTicketFilters() {
 
     const page = Number.isInteger(pageParam) && pageParam > 0 ? pageParam : 1;
 
-    const statusResult = ticketStatusSchema.safeParse(
-        searchParams.get("status"),
-    );
+    const statusResult = ticketStatusSchema.safeParse(searchParams.get("status"));
 
     const status = statusResult.success ? statusResult.data : undefined;
 
-    const priorityResult = ticketPrioritySchema.safeParse(
-        searchParams.get("priority"),
-    );
+    const priorityResult = ticketPrioritySchema.safeParse(searchParams.get("priority"));
 
     const priority = priorityResult.success ? priorityResult.data : undefined;
 
@@ -32,9 +25,7 @@ export function useTicketFilters() {
     const search = debouncedSearch !== "" ? debouncedSearch : undefined;
 
     const hasActiveFilters =
-        status !== undefined ||
-        priority !== undefined ||
-        searchInput.trim() !== "";
+        status !== undefined || priority !== undefined || searchInput.trim() !== "";
 
     function changeParam(
         name: string,

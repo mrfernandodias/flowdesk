@@ -7,7 +7,15 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import type { Ticket } from "@/features/tickets/schemas/ticket-schema";
+import {
+    ticketPriorityOptions,
+    ticketStatusOptions,
+} from "@/features/tickets/constants/ticket-options";
+import {
+    ticketPrioritySchema,
+    ticketStatusSchema,
+    type Ticket,
+} from "@/features/tickets/schemas/ticket-schema";
 import { Search, X } from "lucide-react";
 
 type TicketsToolbarProps = {
@@ -20,54 +28,6 @@ type TicketsToolbarProps = {
     searchValue: string;
     onSearchChange: (value: string) => void;
 };
-
-const statusOptions: Array<{
-    value: Ticket["status"];
-    label: string;
-}> = [
-    {
-        value: "open",
-        label: "Aberto",
-    },
-    {
-        value: "in_progress",
-        label: "Em andamento",
-    },
-    {
-        value: "pending",
-        label: "Pendente",
-    },
-    {
-        value: "resolved",
-        label: "Resolvido",
-    },
-    {
-        value: "closed",
-        label: "Fechado",
-    },
-];
-
-const priorityOptions: Array<{
-    value: Ticket["priority"];
-    label: string;
-}> = [
-    {
-        value: "low",
-        label: "Baixa",
-    },
-    {
-        value: "medium",
-        label: "Média",
-    },
-    {
-        value: "high",
-        label: "Alta",
-    },
-    {
-        value: "urgent",
-        label: "Urgente",
-    },
-];
 
 export function TicketsToolbar({
     status,
@@ -86,7 +46,11 @@ export function TicketsToolbar({
             return;
         }
 
-        onStatusChange(value as Ticket["status"]);
+        const result = ticketStatusSchema.safeParse(value);
+
+        if (result.success) {
+            onStatusChange(result.data);
+        }
     }
 
     function handlePriorityChange(value: string) {
@@ -96,7 +60,11 @@ export function TicketsToolbar({
             return;
         }
 
-        onPriorityChange(value as Ticket["priority"]);
+        const result = ticketPrioritySchema.safeParse(value);
+
+        if (result.success) {
+            onPriorityChange(result.data);
+        }
     }
 
     return (
@@ -122,7 +90,7 @@ export function TicketsToolbar({
                 <SelectContent>
                     <SelectItem value="all">Todos os status</SelectItem>
 
-                    {statusOptions.map((option) => (
+                    {ticketStatusOptions.map((option) => (
                         <SelectItem key={option.value} value={option.value}>
                             {option.label}
                         </SelectItem>
@@ -130,10 +98,7 @@ export function TicketsToolbar({
                 </SelectContent>
             </Select>
 
-            <Select
-                value={priority ?? "all"}
-                onValueChange={handlePriorityChange}
-            >
+            <Select value={priority ?? "all"} onValueChange={handlePriorityChange}>
                 <SelectTrigger className="w-44">
                     <SelectValue placeholder="Prioridade" />
                 </SelectTrigger>
@@ -141,7 +106,7 @@ export function TicketsToolbar({
                 <SelectContent>
                     <SelectItem value="all">Todas as prioridades</SelectItem>
 
-                    {priorityOptions.map((option) => (
+                    {ticketPriorityOptions.map((option) => (
                         <SelectItem key={option.value} value={option.value}>
                             {option.label}
                         </SelectItem>

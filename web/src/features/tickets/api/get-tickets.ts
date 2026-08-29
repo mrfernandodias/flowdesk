@@ -1,26 +1,27 @@
-import {
-    ticketsResponseSchema,
-    type TicketResponse,
-} from "@/features/tickets/schemas/ticket-schema";
 import { api } from "@/shared/lib/http/api";
 
-type GetTicketsParams = {
+import { ticketsResponseSchema, type Ticket, type TicketsResponse } from "../schemas/ticket-schema";
+
+export type GetTicketsParams = {
     organizationId: number;
     page: number;
+    status?: Ticket["status"];
+    priority?: Ticket["priority"];
 };
 
 export async function getTickets({
     organizationId,
     page,
-}: GetTicketsParams): Promise<TicketResponse> {
-    const response = await api.get(
-        `/api/organizations/${organizationId}/tickets`,
-        {
-            params: {
-                page,
-            },
+    status,
+    priority,
+}: GetTicketsParams): Promise<TicketsResponse> {
+    const response = await api.get(`/api/organizations/${organizationId}/tickets`, {
+        params: {
+            page,
+            status,
+            priority,
         },
-    );
+    });
 
     return ticketsResponseSchema.parse(response.data);
 }

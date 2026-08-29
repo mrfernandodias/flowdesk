@@ -1,16 +1,43 @@
-import { getTickets } from "@/features/tickets/api/get-tickets";
 import { useQuery } from "@tanstack/react-query";
 
-export function useTickets(organizationId: number | null, page: number) {
-    return useQuery({
-        queryKey: ["tickets", organizationId, page],
+import { getTickets, type GetTicketsParams } from "../api/get-tickets";
 
-        queryFn: () => getTickets({ organizationId: organizationId!, page }),
+type UseTicketsParams = Omit<GetTicketsParams, "organizationId"> & {
+    organizationId: number | null;
+};
+
+export function useTickets({ organizationId, page, status, priority }: UseTicketsParams) {
+    return useQuery({
+        queryKey: [
+            "tickets",
+            organizationId,
+            {
+                page,
+                status,
+                priority,
+            },
+        ],
+
+        queryFn: () =>
+            getTickets({
+                organizationId: organizationId!,
+                page,
+                status,
+                priority,
+            }),
 
         enabled: organizationId !== null,
 
         staleTime: 30_000,
 
-        placeholderData: (previousData) => previousData,
+        placeholderData: (previousData, previousQuery) => {
+            const previousOrganizationId = previousQuery?.queryKey[1];
+
+            if (previousOrganizationId !== organizationId) {
+                return undefined;
+            }
+
+            return previousData;
+        },
     });
 }

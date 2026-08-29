@@ -48,9 +48,7 @@ export const TicketsTable = ({ tickets }: TicketsTableProps) => {
                             </TableCell>
                             <TableCell>
                                 <div className="max-w-xl">
-                                    <p className="truncate font-medium">
-                                        {ticket.subject}
-                                    </p>
+                                    <p className="truncate font-medium">{ticket.subject}</p>
 
                                     <p className="mt-1 truncate text-sm text-muted-foreground">
                                         {ticket.description}
@@ -61,14 +59,10 @@ export const TicketsTable = ({ tickets }: TicketsTableProps) => {
                                 <TicketStatusBadge status={ticket.status} />
                             </TableCell>
                             <TableCell>
-                                <TicketPriorityBadge
-                                    priority={ticket.priority}
-                                />
+                                <TicketPriorityBadge priority={ticket.priority} />
                             </TableCell>
                             <TableCell className="text-sm text-muted-foreground">
-                                {new Date(ticket.updated_at).toLocaleString(
-                                    "pt-BR",
-                                )}
+                                {new Date(ticket.updated_at).toLocaleString("pt-BR")}
                             </TableCell>
                         </TableRow>
                     ))}

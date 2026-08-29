@@ -1,12 +1,6 @@
 import z from "zod";
 
-export const ticketStatusSchema = z.enum([
-    "open",
-    "in_progress",
-    "pending",
-    "resolved",
-    "closed",
-]);
+export const ticketStatusSchema = z.enum(["open", "in_progress", "pending", "resolved", "closed"]);
 
 export const ticketPrioritySchema = z.enum(["low", "medium", "high", "urgent"]);
 
@@ -35,4 +29,4 @@ export const ticketsResponseSchema = z.object({
 
 export type Ticket = z.output<typeof ticketSchema>;
 
-export type TicketResponse = z.output<typeof ticketsResponseSchema>;
+export type TicketsResponse = z.output<typeof ticketsResponseSchema>;

@@ -20,10 +20,9 @@ export function TicketsPage() {
         page: 1,
     });
 
-    const page =
-        pagination.organizationId === organizationId ? pagination.page : 1;
+    const page = pagination.organizationId === organizationId ? pagination.page : 1;
 
-    const ticketsQuery = useTickets(organizationId, page);
+    const ticketsQuery = useTickets({ organizationId, page });
 
     function handlePageChange(nextPage: number) {
         setPagination({
@@ -35,9 +34,7 @@ export function TicketsPage() {
     if (!selectedOrganization) {
         return (
             <div>
-                <h1 className="text-2xl font-semibold tracking-tight">
-                    Tickets
-                </h1>
+                <h1 className="text-2xl font-semibold tracking-tight">Tickets</h1>
 
                 <p className="mt-1 text-sm text-muted-foreground">
                     Nenhuma organização disponível.
@@ -49,9 +46,7 @@ export function TicketsPage() {
     if (ticketsQuery.isPending && !ticketsQuery.data) {
         return (
             <div>
-                <h1 className="text-2xl font-semibold tracking-tight">
-                    Tickets
-                </h1>
+                <h1 className="text-2xl font-semibold tracking-tight">Tickets</h1>
 
                 <p className="mt-1 text-sm text-muted-foreground">
                     Carregando tickets de {selectedOrganization.name}...
@@ -63,9 +58,7 @@ export function TicketsPage() {
     if (ticketsQuery.isError) {
         return (
             <div>
-                <h1 className="text-2xl font-semibold tracking-tight">
-                    Tickets
-                </h1>
+                <h1 className="text-2xl font-semibold tracking-tight">Tickets</h1>
 
                 <p className="mt-1 text-sm text-destructive">
                     Não foi possível carregar os tickets.
@@ -81,9 +74,7 @@ export function TicketsPage() {
     return (
         <div>
             <div>
-                <h1 className="text-2xl font-semibold tracking-tight">
-                    Tickets
-                </h1>
+                <h1 className="text-2xl font-semibold tracking-tight">Tickets</h1>
 
                 <p className="mt-1 text-sm text-muted-foreground">
                     Atendimentos de {selectedOrganization.name}.

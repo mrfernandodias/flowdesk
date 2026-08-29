@@ -28,6 +28,7 @@ export async function getTickets({
                 page,
                 status,
                 priority,
+                search,
             },
         },
     );

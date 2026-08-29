@@ -27,6 +27,10 @@ export const ticketsResponseSchema = z.object({
     }),
 });
 
+export const ticketResponseSchema = z.object({
+    data: ticketSchema,
+});
+
 export type Ticket = z.output<typeof ticketSchema>;
 
 export type TicketsResponse = z.output<typeof ticketsResponseSchema>;

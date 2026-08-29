@@ -32,8 +32,18 @@ export function useTickets({ organizationId, page, status, priority }: UseTicket
 
         placeholderData: (previousData, previousQuery) => {
             const previousOrganizationId = previousQuery?.queryKey[1];
+            const previousFilter = previousQuery?.queryKey[2] as
+                | {
+                      status?: unknown;
+                      priority?: unknown;
+                  }
+                | undefined;
 
-            if (previousOrganizationId !== organizationId) {
+            if (
+                previousOrganizationId !== organizationId ||
+                previousFilter?.status !== status ||
+                previousFilter?.priority !== priority
+            ) {
                 return undefined;
             }
 

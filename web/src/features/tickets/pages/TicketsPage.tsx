@@ -1,40 +1,96 @@
-import { useState } from "react";
-
 import { useOrganizationSelection } from "@/features/organizations/hooks/use-organization-selection";
 import { TicketsPagination } from "@/features/tickets/components/TicketsPagination";
 import { TicketsTable } from "@/features/tickets/components/TicketsTable";
+import { TicketsToolbar } from "@/features/tickets/components/TicketToolbar";
 import { useTickets } from "@/features/tickets/hooks/use-tickets";
-
-type PaginationState = {
-    organizationId: number | null;
-    page: number;
-};
+import {
+    ticketPrioritySchema,
+    ticketStatusSchema,
+} from "@/features/tickets/schemas/ticket-schema";
+import { useSearchParams } from "react-router";
 
 export function TicketsPage() {
     const { selectedOrganization } = useOrganizationSelection();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const organizationId = selectedOrganization?.id ?? null;
 
-    const [pagination, setPagination] = useState<PaginationState>({
-        organizationId: null,
-        page: 1,
-    });
+    const pageParam = Number(searchParams.get("page") ?? "1");
 
-    const page = pagination.organizationId === organizationId ? pagination.page : 1;
+    const page = Number.isInteger(pageParam) && pageParam > 0 ? pageParam : 1;
 
-    const ticketsQuery = useTickets({ organizationId, page });
+    const statusResult = ticketStatusSchema.safeParse(
+        searchParams.get("status"),
+    );
+
+    const status = statusResult.success ? statusResult.data : undefined;
+
+    const priorityResult = ticketPrioritySchema.safeParse(
+        searchParams.get("priority"),
+    );
+
+    const priority = priorityResult.success ? priorityResult.data : undefined;
+
+    const hasActiveFilter = status !== undefined || priority !== undefined;
+
+    const ticketsQuery = useTickets({ organizationId, page, status, priority });
 
     function handlePageChange(nextPage: number) {
-        setPagination({
-            organizationId,
-            page: nextPage,
-        });
+        const nextSearchParams = new URLSearchParams(searchParams);
+
+        if (nextPage === 1) {
+            nextSearchParams.delete("page");
+        } else {
+            nextSearchParams.set("page", String(nextPage));
+        }
+
+        setSearchParams(nextSearchParams);
+    }
+
+    function handleStatusChange(nextStatus: typeof status | undefined) {
+        const nextSearchParams = new URLSearchParams(searchParams);
+
+        if (nextStatus) {
+            nextSearchParams.set("status", nextStatus);
+        } else {
+            nextSearchParams.delete("status");
+        }
+
+        nextSearchParams.delete("page");
+
+        setSearchParams(nextSearchParams);
+    }
+
+    function handlePriorityChange(nextPriority: typeof priority | undefined) {
+        const nextSearchParams = new URLSearchParams(searchParams);
+
+        if (nextPriority) {
+            nextSearchParams.set("priority", nextPriority);
+        } else {
+            nextSearchParams.delete("priority");
+        }
+
+        nextSearchParams.delete("page");
+
+        setSearchParams(nextSearchParams);
+    }
+
+    function handleClearFilters() {
+        const nextSearchParams = new URLSearchParams(searchParams);
+
+        nextSearchParams.delete("status");
+        nextSearchParams.delete("priority");
+        nextSearchParams.delete("page");
+
+        setSearchParams(nextSearchParams);
     }
 
     if (!selectedOrganization) {
         return (
             <div>
-                <h1 className="text-2xl font-semibold tracking-tight">Tickets</h1>
+                <h1 className="text-2xl font-semibold tracking-tight">
+                    Tickets
+                </h1>
 
                 <p className="mt-1 text-sm text-muted-foreground">
                     Nenhuma organização disponível.
@@ -46,7 +102,9 @@ export function TicketsPage() {
     if (ticketsQuery.isPending && !ticketsQuery.data) {
         return (
             <div>
-                <h1 className="text-2xl font-semibold tracking-tight">Tickets</h1>
+                <h1 className="text-2xl font-semibold tracking-tight">
+                    Tickets
+                </h1>
 
                 <p className="mt-1 text-sm text-muted-foreground">
                     Carregando tickets de {selectedOrganization.name}...
@@ -58,7 +116,9 @@ export function TicketsPage() {
     if (ticketsQuery.isError) {
         return (
             <div>
-                <h1 className="text-2xl font-semibold tracking-tight">Tickets</h1>
+                <h1 className="text-2xl font-semibold tracking-tight">
+                    Tickets
+                </h1>
 
                 <p className="mt-1 text-sm text-destructive">
                     Não foi possível carregar os tickets.
@@ -74,7 +134,9 @@ export function TicketsPage() {
     return (
         <div>
             <div>
-                <h1 className="text-2xl font-semibold tracking-tight">Tickets</h1>
+                <h1 className="text-2xl font-semibold tracking-tight">
+                    Tickets
+                </h1>
 
                 <p className="mt-1 text-sm text-muted-foreground">
                     Atendimentos de {selectedOrganization.name}.
@@ -82,6 +144,17 @@ export function TicketsPage() {
             </div>
 
             <div className="mt-6">
+                <TicketsToolbar
+                    status={status}
+                    onStatusChange={handleStatusChange}
+                    priority={priority}
+                    onPriorityChange={handlePriorityChange}
+                    hasActiveFilters={hasActiveFilter}
+                    onClearFilters={handleClearFilters}
+                />
+            </div>
+
+            <div className="mt-4">
                 <TicketsTable tickets={ticketsQuery.data.data} />
             </div>
 

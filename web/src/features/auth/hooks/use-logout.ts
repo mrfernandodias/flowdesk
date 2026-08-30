@@ -8,10 +8,7 @@ export function useLogout() {
         mutationFn: logout,
 
         onSuccess: () => {
-            queryClient.removeQueries({
-                queryKey: ["current-user"],
-                exact: true,
-            });
+            queryClient.clear();
         },
     });
 }

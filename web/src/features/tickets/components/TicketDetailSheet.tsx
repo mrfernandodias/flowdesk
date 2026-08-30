@@ -10,6 +10,22 @@ import {
 } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import {
+    ticketPriorityOptions,
+    ticketStatusOptions,
+} from "@/features/tickets/constants/ticket-options";
+import { useUpdateTicket } from "@/features/tickets/hooks/use-update-ticket";
+import {
+    ticketPrioritySchema,
+    ticketStatusSchema,
+} from "@/features/tickets/schemas/ticket-schema";
 import { useTicket } from "../hooks/use-ticket";
 import { TicketPriorityBadge } from "./TicketPriorityBadge";
 import { TicketStatusBadge } from "./TicketStatusBadge";
@@ -36,6 +52,35 @@ export function TicketDetailSheet({
         organizationId,
         ticketId,
     });
+
+    const updateTicketMutation = useUpdateTicket({
+        organizationId,
+        ticketId,
+    });
+
+    function handleStatusChange(value: string) {
+        const result = ticketStatusSchema.safeParse(value);
+
+        if (!result.success) {
+            return;
+        }
+
+        updateTicketMutation.mutate({
+            status: result.data,
+        });
+    }
+
+    function handlePriorityChange(value: string) {
+        const result = ticketPrioritySchema.safeParse(value);
+
+        if (!result.success) {
+            return;
+        }
+
+        updateTicketMutation.mutate({
+            priority: result.data,
+        });
+    }
 
     return (
         <Sheet
@@ -113,6 +158,81 @@ export function TicketDetailSheet({
                                 <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-muted-foreground">
                                     {ticketQuery.data.description}
                                 </p>
+                            </section>
+                            <section>
+                                <h3 className="text-sm font-medium">
+                                    Atendimento
+                                </h3>
+
+                                <div className="mt-3 grid gap-4 sm:grid-cols-2">
+                                    <div className="space-y-2">
+                                        <p className="text-xs text-muted-foreground">
+                                            Status
+                                        </p>
+
+                                        <Select
+                                            value={ticketQuery.data.status}
+                                            onValueChange={handleStatusChange}
+                                            disabled={
+                                                updateTicketMutation.isPending
+                                            }
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue />
+                                            </SelectTrigger>
+
+                                            <SelectContent>
+                                                {ticketStatusOptions.map(
+                                                    (option) => (
+                                                        <SelectItem
+                                                            key={option.value}
+                                                            value={option.value}
+                                                        >
+                                                            {option.label}
+                                                        </SelectItem>
+                                                    ),
+                                                )}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <p className="text-xs text-muted-foreground">
+                                            Prioridade
+                                        </p>
+
+                                        <Select
+                                            value={ticketQuery.data.priority}
+                                            onValueChange={handlePriorityChange}
+                                            disabled={
+                                                updateTicketMutation.isPending
+                                            }
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue />
+                                            </SelectTrigger>
+
+                                            <SelectContent>
+                                                {ticketPriorityOptions.map(
+                                                    (option) => (
+                                                        <SelectItem
+                                                            key={option.value}
+                                                            value={option.value}
+                                                        >
+                                                            {option.label}
+                                                        </SelectItem>
+                                                    ),
+                                                )}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+
+                                {updateTicketMutation.isError && (
+                                    <p className="mt-2 text-sm text-destructive">
+                                        Não foi possível atualizar o ticket.
+                                    </p>
+                                )}
                             </section>
 
                             <Separator />

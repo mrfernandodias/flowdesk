@@ -22,7 +22,7 @@ export function Topbar() {
                         className="
                             size-9 rounded-md
                             border border-border
-                            hover:bg-muted
+                            hover:bg-muted cursor-pointer
                         "
                     />
 

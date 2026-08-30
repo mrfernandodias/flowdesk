@@ -1,8 +1,20 @@
 import z from "zod";
 
-export const ticketStatusSchema = z.enum(["open", "in_progress", "pending", "resolved", "closed"]);
+export const ticketStatusSchema = z.enum([
+    "open",
+    "in_progress",
+    "pending",
+    "resolved",
+    "closed",
+]);
 
 export const ticketPrioritySchema = z.enum(["low", "medium", "high", "urgent"]);
+
+export const ticketCreatorSchema = z.object({
+    id: z.number(),
+    name: z.string(),
+    email: z.string(),
+});
 
 export const ticketSchema = z.object({
     id: z.number(),
@@ -13,6 +25,7 @@ export const ticketSchema = z.object({
     status: ticketStatusSchema,
     priority: ticketPrioritySchema,
     created_at: z.string(),
+    creator: ticketCreatorSchema.optional(),
     updated_at: z.string(),
 });
 

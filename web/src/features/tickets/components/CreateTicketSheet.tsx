@@ -71,7 +71,7 @@ export const CreateTicketSheet = ({
     return (
         <Sheet open={open} onOpenChange={handleOpenChange}>
             <SheetTrigger asChild>
-                <Button>
+                <Button className="cursor-pointer">
                     <Plus className="size-4" />
                     Novo ticket
                 </Button>

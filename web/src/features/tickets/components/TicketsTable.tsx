@@ -12,9 +12,13 @@ import type { Ticket } from "@/features/tickets/schemas/ticket-schema";
 
 type TicketsTableProps = {
     tickets: Ticket[];
+    onTicketSelect: (ticketId: number) => void;
 };
 
-export const TicketsTable = ({ tickets }: TicketsTableProps) => {
+export const TicketsTable = ({
+    tickets,
+    onTicketSelect,
+}: TicketsTableProps) => {
     if (tickets.length === 0) {
         return (
             <div className="rounded-lg border border-dashed bg-background p-10 text-center">
@@ -42,13 +46,19 @@ export const TicketsTable = ({ tickets }: TicketsTableProps) => {
 
                 <TableBody>
                     {tickets.map((ticket) => (
-                        <TableRow key={ticket.id} className="cursor-pointer">
+                        <TableRow
+                            key={ticket.id}
+                            className="cursor-pointer"
+                            onClick={() => onTicketSelect(ticket.id)}
+                        >
                             <TableCell className="font-medium text-muted-foreground">
                                 #{ticket.id}
                             </TableCell>
                             <TableCell>
                                 <div className="max-w-xl">
-                                    <p className="truncate font-medium">{ticket.subject}</p>
+                                    <p className="truncate font-medium">
+                                        {ticket.subject}
+                                    </p>
 
                                     <p className="mt-1 truncate text-sm text-muted-foreground">
                                         {ticket.description}
@@ -59,10 +69,14 @@ export const TicketsTable = ({ tickets }: TicketsTableProps) => {
                                 <TicketStatusBadge status={ticket.status} />
                             </TableCell>
                             <TableCell>
-                                <TicketPriorityBadge priority={ticket.priority} />
+                                <TicketPriorityBadge
+                                    priority={ticket.priority}
+                                />
                             </TableCell>
                             <TableCell className="text-sm text-muted-foreground">
-                                {new Date(ticket.updated_at).toLocaleString("pt-BR")}
+                                {new Date(ticket.updated_at).toLocaleString(
+                                    "pt-BR",
+                                )}
                             </TableCell>
                         </TableRow>
                     ))}

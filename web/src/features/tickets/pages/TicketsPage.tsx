@@ -1,16 +1,31 @@
 import { useOrganizationSelection } from "@/features/organizations/hooks/use-organization-selection";
 import { CreateTicketSheet } from "@/features/tickets/components/CreateTicketSheet";
+import { TicketDetailSheet } from "@/features/tickets/components/TicketDetailSheet";
 import { TicketsPagination } from "@/features/tickets/components/TicketsPagination";
 import { TicketsTable } from "@/features/tickets/components/TicketsTable";
 import { TicketsTableSkeleton } from "@/features/tickets/components/TicketsTableSkeleton";
 import { TicketsToolbar } from "@/features/tickets/components/TicketToolbar";
 import { useTicketFilters } from "@/features/tickets/hooks/use-ticket-filters";
 import { useTickets } from "@/features/tickets/hooks/use-tickets";
+import { useState } from "react";
+
+type TicketSelection = {
+    organizationId: number;
+    ticketId: number;
+} | null;
 
 export function TicketsPage() {
     const { selectedOrganization } = useOrganizationSelection();
     const organizationId = selectedOrganization?.id ?? null;
     const filters = useTicketFilters();
+
+    const [ticketSelection, setTicketSelection] =
+        useState<TicketSelection>(null);
+
+    const selectedTicketId =
+        ticketSelection?.organizationId === organizationId
+            ? ticketSelection.ticketId
+            : null;
 
     const ticketsQuery = useTickets({
         organizationId,
@@ -19,6 +34,21 @@ export function TicketsPage() {
         priority: filters.priority,
         search: filters.search,
     });
+
+    function handleTicketSelect(ticketId: number) {
+        if (organizationId === null) {
+            return;
+        }
+
+        setTicketSelection({
+            organizationId,
+            ticketId,
+        });
+    }
+
+    function handleTicketClose() {
+        setTicketSelection(null);
+    }
 
     if (!selectedOrganization) {
         return (
@@ -84,7 +114,10 @@ export function TicketsPage() {
                 {ticketsQuery.isPending ? (
                     <TicketsTableSkeleton />
                 ) : ticketsQuery.data ? (
-                    <TicketsTable tickets={ticketsQuery.data.data} />
+                    <TicketsTable
+                        tickets={ticketsQuery.data.data}
+                        onTicketSelect={handleTicketSelect}
+                    />
                 ) : null}
             </div>
 
@@ -98,6 +131,12 @@ export function TicketsPage() {
                     />
                 </div>
             )}
+
+            <TicketDetailSheet
+                organizationId={organizationId}
+                ticketId={selectedTicketId}
+                onClose={handleTicketClose}
+            />
         </div>
     );
 }

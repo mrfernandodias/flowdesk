@@ -1,5 +1,6 @@
-import { useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 
+import { useLocation, useNavigate, useParams } from "react-router";
 import { useOrganizations } from "../hooks/use-organizations";
 import { OrganizationSelectionContext } from "./organization-selection-context";
 
@@ -7,21 +8,47 @@ type OrganizationSelectionProviderProps = {
     children: ReactNode;
 };
 
-export function OrganizationSelectionProvider({ children }: OrganizationSelectionProviderProps) {
+export function OrganizationSelectionProvider({
+    children,
+}: OrganizationSelectionProviderProps) {
     const organizationsQuery = useOrganizations();
 
-    const [selectedOrganizationId, setSelectedOrganizationId] = useState<number | null>(null);
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const { organizationSlug } = useParams<{
+        organizationSlug: string;
+    }>();
 
     const organizations = organizationsQuery.data ?? [];
 
-    const effectiveSelectedOrganizationId = selectedOrganizationId ?? organizations[0]?.id ?? null;
-
     const selectedOrganization =
-        organizations.find((organization) => organization.id === effectiveSelectedOrganizationId) ??
-        null;
+        organizations.find(
+            (organization) => organization.slug === organizationSlug,
+        ) ?? null;
 
     function selectOrganization(organizationId: number) {
-        setSelectedOrganizationId(organizationId);
+        const organization = organizations.find(
+            (item) => item.id === organizationId,
+        );
+
+        if (!organization) {
+            return;
+        }
+
+        const nextPathname = location.pathname.replace(
+            /^\/o\/[^/]+/,
+            `/o/${organization.slug}`,
+        );
+
+        const nextSearchParams = new URLSearchParams(location.search);
+
+        nextSearchParams.delete("page");
+
+        navigate({
+            pathname: nextPathname,
+            search: nextSearchParams.toString(),
+        });
     }
 
     return (

@@ -5,6 +5,8 @@ import { RequireAuth } from "@/features/auth/components/RequireAuth";
 import { RequireGuest } from "@/features/auth/components/RequireGuest";
 import { LoginPage } from "@/features/auth/pages/LoginPage";
 import { DashboardPage } from "@/features/dashboard/pages/DashboardPage";
+import { NotFoundPage } from "@/features/erros/pages/NotFoundPage";
+import { OrganizationEntryRedirect } from "@/features/organizations/components/OrganizationEntryRedirect";
 import { ReportsPage } from "@/features/reports/pages/ReportsPage";
 import { SettingsPage } from "@/features/settings/pages/SettingsPage";
 import { TeamPage } from "@/features/team/pages/TeamPage";
@@ -18,20 +20,23 @@ export function AppRouter() {
             </Route>
 
             <Route element={<RequireAuth />}>
-                <Route element={<AppShell />}>
-                    <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/" element={<OrganizationEntryRedirect />} />
+                <Route path="/o" element={<Navigate to="/" replace />} />
 
-                    <Route path="/tickets" element={<TicketsPage />} />
+                <Route path="/o/:organizationSlug" element={<AppShell />}>
+                    <Route path="dashboard" element={<DashboardPage />} />
 
-                    <Route path="/team" element={<TeamPage />} />
+                    <Route path="tickets" element={<TicketsPage />} />
 
-                    <Route path="/reports" element={<ReportsPage />} />
+                    <Route path="team" element={<TeamPage />} />
 
-                    <Route path="/settings" element={<SettingsPage />} />
+                    <Route path="reports" element={<ReportsPage />} />
+
+                    <Route path="settings" element={<SettingsPage />} />
                 </Route>
             </Route>
 
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="*" element={<NotFoundPage />} />
         </Routes>
     );
 }

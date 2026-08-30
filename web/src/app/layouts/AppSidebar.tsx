@@ -1,4 +1,10 @@
-import { BarChart3, LayoutDashboard, Settings, Ticket, Users } from "lucide-react";
+import {
+    BarChart3,
+    LayoutDashboard,
+    Settings,
+    Ticket,
+    Users,
+} from "lucide-react";
 import { NavLink, useLocation } from "react-router";
 
 import {
@@ -13,34 +19,35 @@ import {
     SidebarMenuItem,
     SidebarRail,
 } from "@/components/ui/sidebar";
+import { useOrganizationSelection } from "@/features/organizations/hooks/use-organization-selection";
 
 const navigation = [
     {
         title: "Dashboard",
         icon: LayoutDashboard,
-        path: "/dashboard",
+        path: "dashboard",
     },
     {
         title: "Tickets",
         icon: Ticket,
-        path: "/tickets",
+        path: "tickets",
     },
     {
         title: "Equipe",
         icon: Users,
-        path: "/team",
+        path: "team",
     },
     {
         title: "Relatórios",
         icon: BarChart3,
-        path: "/reports",
+        path: "reports",
     },
 ];
 
 const settingsItem = {
     title: "Configurações",
     icon: Settings,
-    path: "/settings",
+    path: "settings",
 };
 
 function isPathActive(currentPath: string, itemPath: string) {
@@ -49,6 +56,18 @@ function isPathActive(currentPath: string, itemPath: string) {
 
 export function AppSidebar() {
     const location = useLocation();
+
+    const { selectedOrganization } = useOrganizationSelection();
+
+    function getOrganizationPath(path: string) {
+        if (!selectedOrganization) {
+            return "/";
+        }
+
+        return `/o/${selectedOrganization.slug}/${path}`;
+    }
+
+    const settingsPath = getOrganizationPath(settingsItem.path);
 
     return (
         <Sidebar collapsible="icon">
@@ -76,7 +95,9 @@ export function AppSidebar() {
                             group-data-[collapsible=icon]:hidden
                         "
                     >
-                        <span className="truncate text-base font-semibold">FlowDesk</span>
+                        <span className="truncate text-base font-semibold">
+                            FlowDesk
+                        </span>
 
                         <span className="truncate text-xs text-muted-foreground">
                             Service Management
@@ -99,7 +120,12 @@ export function AppSidebar() {
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {navigation.map((item) => {
-                                const isActive = isPathActive(location.pathname, item.path);
+                                const itemPath = getOrganizationPath(item.path);
+
+                                const isActive = isPathActive(
+                                    location.pathname,
+                                    itemPath,
+                                );
 
                                 return (
                                     <SidebarMenuItem
@@ -121,7 +147,7 @@ export function AppSidebar() {
                                                 group-data-[collapsible=icon]:p-0!
                                             "
                                         >
-                                            <NavLink to={item.path}>
+                                            <NavLink to={itemPath}>
                                                 <item.icon className="size-5 shrink-0" />
 
                                                 <span className="group-data-[collapsible=icon]:hidden">
@@ -142,7 +168,10 @@ export function AppSidebar() {
                             <SidebarMenuItem className="flex w-full justify-center">
                                 <SidebarMenuButton
                                     asChild
-                                    isActive={isPathActive(location.pathname, settingsItem.path)}
+                                    isActive={isPathActive(
+                                        location.pathname,
+                                        settingsPath,
+                                    )}
                                     tooltip={settingsItem.title}
                                     className="
                                         h-9 w-full rounded-[6px] px-3
@@ -155,7 +184,7 @@ export function AppSidebar() {
                                         group-data-[collapsible=icon]:p-0!
                                     "
                                 >
-                                    <NavLink to={settingsItem.path}>
+                                    <NavLink to={settingsPath}>
                                         <settingsItem.icon className="size-5 shrink-0" />
 
                                         <span className="group-data-[collapsible=icon]:hidden">
